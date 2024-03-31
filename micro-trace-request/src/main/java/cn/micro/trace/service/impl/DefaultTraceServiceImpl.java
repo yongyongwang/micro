@@ -3,6 +3,7 @@ package cn.micro.trace.service.impl;
 import cn.micro.trace.service.TraceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 
 import java.text.DecimalFormat;
@@ -14,6 +15,9 @@ import java.util.stream.Collectors;
  * 默认跟踪实现
  */
 public class DefaultTraceServiceImpl implements TraceService {
+
+    @Value("${request.bytes.size:20480}")
+    private Integer reqBytesSize;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TraceService.class);
 
@@ -60,12 +64,13 @@ public class DefaultTraceServiceImpl implements TraceService {
      * @param bytes 数据
      * @return 大小 | 数据
      */
-    public static String formatBytes(byte[] bytes) {
+    public String formatBytes(byte[] bytes) {
         long size = bytes.length;
         int lastIndex = (int) (size - 1);
         if (size == 1
-                || (size < 20480 && bytes[0] == 123 && bytes[lastIndex] == 125)
-                || (size < 20480 && bytes[0] == 91 && bytes[lastIndex] == 93)) {
+                || reqBytesSize <= 0
+                || (size < reqBytesSize && bytes[0] == 123 && bytes[lastIndex] == 125)
+                || (size < reqBytesSize && bytes[0] == 91 && bytes[lastIndex] == 93)) {
             return new String(bytes);
         }
         int digitGroups = Math.min(UNIT_NAMES.length - 1, (int) (Math.log10(size) / Math.log10(1024)));
