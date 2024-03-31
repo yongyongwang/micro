@@ -3,6 +3,7 @@ package cn.micro.trace.service.impl;
 import cn.micro.trace.service.TraceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -26,7 +27,7 @@ public class DefaultTraceServiceImpl implements TraceService {
             , byte[] rspBody
             , String serviceMethod
             , long cost) {
-        LOGGER.info("{\"biz\":\"请求埋点\",\"status\":" + rspStatus + ",\"url\":\"" + url + "\",\"method\":\"" + method + "\",\"params\":\"" + parameters.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, kv -> String.join(",", kv.getValue()))).entrySet().stream().map(kv -> (kv.getKey() + "=" + kv.getValue())).collect(Collectors.joining("&")) + "\",\"payload\":" + (reqBody.length > 0 ? formatBytes(reqBody) : "\"\"") + ",\"resp\":" + (rspBody.length > 0 ? formatBytes(rspBody) : "\"\"") + ",\"api\":\"" + serviceMethod + "\",\"cost\":\"" + format(cost) + "\"}");
+        LOGGER.info("{\"biz\":\"请求埋点\",\"status\":" + rspStatus + ",\"url\":\"" + url + "\",\"method\":\"" + method + "\",\"params\":\"" + parameters.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, kv -> String.join(",", kv.getValue()))).entrySet().stream().map(kv -> (kv.getKey() + "=" + kv.getValue())).collect(Collectors.joining("&")) + "\",\"payload\":" + (reqBody.length > 0 ? formatBytes(reqBody) : "\"\"") + ",\"resp\":" + (rspBody.length > 0 ? formatBytes(rspBody) : "\"\"") + ",\"api\":\"" + (StringUtils.isEmpty(serviceMethod) ? "" : serviceMethod) + "\",\"cost\":\"" + format(cost) + "\"}");
     }
 
     /**

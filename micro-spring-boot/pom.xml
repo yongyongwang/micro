@@ -6,8 +6,7 @@
     <parent>
         <groupId>io.github.mvertl</groupId>
         <artifactId>micro-service-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../micro-service-parent/pom.xml</relativePath>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>micro-spring-boot</artifactId>
@@ -26,7 +25,7 @@
         <dependency>
             <groupId>io.github.mvertl</groupId>
             <artifactId>micro-trace-request</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 

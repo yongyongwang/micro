@@ -12,13 +12,8 @@
 
 <!--    <groupId>io.github.mvertl</groupId>-->
     <artifactId>micro-service-parent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+<!--    <version>1.0.0-SNAPSHOT</version>-->
     <packaging>pom</packaging>
-    <modules>
-        <module>../micro-spring-boot-starter</module>
-        <module>../micro-trace-request</module>
-        <module>../micro-spring-boot</module>
-    </modules>
 
     <properties>
         <java.version>1.8</java.version>
