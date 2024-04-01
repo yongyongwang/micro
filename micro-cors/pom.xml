@@ -9,7 +9,7 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>micro-spring-boot-starter</artifactId>
+    <artifactId>micro-cors</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -19,19 +19,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.github.mvertl</groupId>
-            <artifactId>micro-cors</artifactId>
-            <version>1.0.0</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.github.mvertl</groupId>
-            <artifactId>micro-trace-unique</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.mvertl</groupId>
-            <artifactId>micro-trace-request</artifactId>
-            <version>1.0.0</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
     </dependencies>
 
