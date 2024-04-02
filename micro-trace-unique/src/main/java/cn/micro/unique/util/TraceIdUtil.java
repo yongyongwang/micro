@@ -72,7 +72,7 @@ public final class TraceIdUtil {
         final String jvmName = ManagementFactory.getRuntimeMXBean().getName();
         final int index = jvmName.indexOf('@');
         if (index > 0) {
-            pId = Integer.parseInt(jvmName.substring(0, index), -1);
+            pId = Integer.parseInt(jvmName.substring(0, index));
             return pId;
         }
         return pId;
