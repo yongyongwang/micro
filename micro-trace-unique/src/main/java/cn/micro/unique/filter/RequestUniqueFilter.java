@@ -27,7 +27,9 @@ public class RequestUniqueFilter extends OncePerRequestFilter implements Ordered
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            String traceId = Optional.ofNullable(MDC.get(requestKey)).orElse(TraceIdUtil.genTraceId());
+            String traceId = Optional.ofNullable(MDC.get(requestKey))
+                    .orElse(Optional.ofNullable(request.getHeader(requestKey))
+                            .orElse(TraceIdUtil.genTraceId()));
             MDC.put(requestKey, traceId);
             filterChain.doFilter(request, response);
             response.setHeader(requestKey, traceId);
