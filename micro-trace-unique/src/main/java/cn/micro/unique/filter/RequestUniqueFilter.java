@@ -5,6 +5,7 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.filter.OrderedFilter;
 import org.springframework.core.Ordered;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -29,7 +30,8 @@ public class RequestUniqueFilter extends OncePerRequestFilter implements Ordered
         try {
             String traceId = Optional.ofNullable(MDC.get(requestKey))
                     .orElse(Optional.ofNullable(request.getHeader(requestKey))
-                            .orElse(TraceIdUtil.genTraceId()));
+                            .orElse(Optional.ofNullable(traceIdSw8Header(request.getHeader("sw8")))
+                                    .orElse(TraceIdUtil.genTraceId())));
             MDC.put(requestKey, traceId);
             filterChain.doFilter(request, response);
             response.setHeader(requestKey, traceId);
@@ -37,4 +39,21 @@ public class RequestUniqueFilter extends OncePerRequestFilter implements Ordered
             MDC.remove(requestKey);
         }
     }
+
+    /**
+     * SkyWalking sw8获取跟踪ID
+     *
+     * @param sw8 header 值
+     * @return 跟踪ID
+     */
+    private String traceIdSw8Header(String sw8) {
+        try {
+            String[] values = sw8.split("-");
+            String value = values[1];
+            return new String(Base64Utils.decodeFromString(value));
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
 }
