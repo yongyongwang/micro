@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 public class RequestUniqueFilter extends OncePerRequestFilter implements OrderedFilter {
 
@@ -26,7 +27,7 @@ public class RequestUniqueFilter extends OncePerRequestFilter implements Ordered
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            String traceId = TraceIdUtil.genTraceId();
+            String traceId = Optional.ofNullable(MDC.get(requestKey)).orElse(TraceIdUtil.genTraceId());
             MDC.put(requestKey, traceId);
             filterChain.doFilter(request, response);
             response.setHeader(requestKey, traceId);
