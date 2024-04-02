@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.filter.OrderedFilter;
 import org.springframework.core.Ordered;
 import org.springframework.util.Base64Utils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -47,6 +48,9 @@ public class RequestUniqueFilter extends OncePerRequestFilter implements Ordered
      * @return 跟踪ID
      */
     private String traceIdSw8Header(String sw8) {
+        if (StringUtils.isEmpty(sw8)) {
+            return null;
+        }
         try {
             String[] values = sw8.split("-");
             String value = values[1];
