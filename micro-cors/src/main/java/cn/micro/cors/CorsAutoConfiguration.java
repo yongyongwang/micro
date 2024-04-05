@@ -58,7 +58,8 @@ public class CorsAutoConfiguration {
                     "PATCH", "DELETE", "OPTIONS", "TRACE"));
 
             // 预检缓存 30 分钟
-            config.setMaxAge(Duration.ofMinutes(30));
+            Duration duration=Duration.ofMinutes(30L);
+            config.setMaxAge(duration);
 
             return config;
         });

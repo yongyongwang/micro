@@ -25,6 +25,9 @@ public class CreateOrderListener {
     @Resource
     private CreateOrderOutStream createOrderOutStream;
 
+    @Resource
+    private DelayCreateOrderOutStream delayCreateOrderOutStream;
+
     @StreamListener("input_create_order_task")
     public void createOrder(String msg, @Header(AmqpHeaders.CHANNEL) Channel channel,
                             @Header(AmqpHeaders.DELIVERY_TAG) Long deliveryTag) throws IOException {
@@ -36,7 +39,7 @@ public class CreateOrderListener {
         }
     }
 
-    @StreamListener("delay_input_create_order_task")
+    @StreamListener("death_input_create_order_task")
     @SendTo("output_create_order_task")
     public String delayCreateOrder(String msg, Message message, @Header(AmqpHeaders.MESSAGE_ID) String messageId
             , @Header(AmqpHeaders.CHANNEL) Channel channel
@@ -46,11 +49,13 @@ public class CreateOrderListener {
         if (!CollectionUtils.isEmpty(xDeath)) {
             Integer deathCount = Optional.ofNullable(xDeath.get(0).get("count")).map(String::valueOf).map(Integer::parseInt).orElse(0);
             if (deathCount > 3) {
+                delayCreateOrderOutStream.notifyCreateOrder().send(message);
                 channel.basicAck(deliveryTag, false);
                 return null;
             }
         }
         Thread.sleep(3000);
+        channel.basicAck(deliveryTag, false);
         //createOrderOutStream.notifyCreateOrder().send(message);
         return msg;
     }
