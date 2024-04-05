@@ -41,9 +41,9 @@ public class CorsAutoConfiguration {
             config.addAllowedOrigin(origin);
 
             // 允许所有请求 Header
-            String requestHeders = request.getHeader(HttpHeaders.ACCESS_CONTROL_REQUEST_HEADERS);
-            if (StringUtils.hasText(requestHeders)) {
-                config.setAllowedHeaders(Stream.of(requestHeders.split(",")).map(String::trim).distinct().collect(Collectors.toList()));
+            String requestHeader = request.getHeader(HttpHeaders.ACCESS_CONTROL_REQUEST_HEADERS);
+            if (StringUtils.hasText(requestHeader)) {
+                config.setAllowedHeaders(Stream.of(requestHeader.split(",")).map(String::trim).distinct().collect(Collectors.toList()));
             }
 
             // 默认允许 Javascript 访问的响应头
@@ -58,8 +58,7 @@ public class CorsAutoConfiguration {
                     "PATCH", "DELETE", "OPTIONS", "TRACE"));
 
             // 预检缓存 30 分钟
-            Duration duration=Duration.ofMinutes(30L);
-            config.setMaxAge(duration);
+            config.setMaxAge(Duration.ofMinutes(30L).getSeconds());
 
             return config;
         });
