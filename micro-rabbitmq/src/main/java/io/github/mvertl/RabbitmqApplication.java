@@ -12,8 +12,8 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
         , CreateOrderOutStream.class})
 @EnableRabbit
 @SpringBootApplication
-public class Main {
+public class RabbitmqApplication {
     public static void main(String[] args) {
-        SpringApplication.run(Main.class);
+        SpringApplication.run(RabbitmqApplication.class);
     }
 }
