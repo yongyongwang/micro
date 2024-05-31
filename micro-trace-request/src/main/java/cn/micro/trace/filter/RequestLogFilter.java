@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.filter.OrderedFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpMethod;
+import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
@@ -15,6 +16,7 @@ import org.springframework.web.util.UriUtils;
 import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -59,7 +61,8 @@ public class RequestLogFilter extends OncePerRequestFilter implements OrderedFil
         try {
             filterChain.doFilter(contentCachingRequestWrapper, contentCachingResponseWrapper);
         } finally {
-            byte[] reqBody = contentCachingRequestWrapper.getContentAsByteArray();
+            ServletInputStream inputStream = contentCachingRequestWrapper.getInputStream();
+            byte[] reqBody = inputStream.isFinished() ? contentCachingRequestWrapper.getContentAsByteArray() : StreamUtils.copyToByteArray(inputStream);
             byte[] rspBody = contentCachingResponseWrapper.getContentAsByteArray();
             if (!httpServletResponse.isCommitted()) {
                 httpServletResponse.getOutputStream().write(rspBody);
@@ -77,7 +80,7 @@ public class RequestLogFilter extends OncePerRequestFilter implements OrderedFil
                         , (System.nanoTime() - startTime));
             } catch (Throwable throwable) {
                 // 忽略异常，不处理
-                LOGGER.debug(throwable.getMessage(), throwable);
+                LOGGER.error(throwable.getMessage(), throwable);
             }
         }
     }
