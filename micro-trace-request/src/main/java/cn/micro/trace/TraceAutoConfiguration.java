@@ -18,6 +18,7 @@ public class TraceAutoConfiguration {
 
     @Bean
     @ConditionalOnBean(DispatcherServlet.class)
+    @ConditionalOnClass(name = "javax.servlet.Filter")
     public RequestLogFilter requestLogFilter() {
         return new RequestLogFilter();
     }
@@ -25,6 +26,7 @@ public class TraceAutoConfiguration {
     @Bean
     @ConditionalOnBean(DispatcherServlet.class)
     @ConditionalOnMissingBean
+    @ConditionalOnClass(name = "javax.servlet.Filter")
     public TraceService traceService() {
         return new DefaultTraceServiceImpl();
     }
